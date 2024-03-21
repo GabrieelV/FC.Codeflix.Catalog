@@ -58,5 +58,20 @@ namespace FC.Codeflix.Catalog.UnitTests.Domain.Entity.Category
             Assert.True(category.CreatedAt < datetimeAfter);
             Assert.Equal(isActive, category.IsActive);
         }
+
+        [Theory(DisplayName = nameof(InstantiateErrorWhenNameIsEmpty))]
+        [Trait("Domain", "Category - Aggregates")]
+        [InlineData("")]
+        [InlineData(null)]
+        [InlineData("   ")]
+        public void InstantiateErrorWhenNameIsEmpty(string? name)   
+        {
+            Action action = 
+                () => new DomainEntity.Category(name!, "Category Description");
+
+            var exception = Assert.Throws<EntityValidationException>(action);
+            Assert.Equal("Name should not be empty or null", exception.Message);
+        }
     }
+
 }
